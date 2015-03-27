@@ -1,0 +1,153 @@
+<html>
+<head>
+  <title>Kate's Robot Fun</title>
+  <link rel="stylesheet" type="text/css" href="font-awesome.min.css">
+  <style type="text/css">
+    body {
+      background: #eee;
+      font-family: 'Helvetica Neue', Arial;
+      font-weight: 300;
+    }
+
+    .remote {
+      padding: 40px;
+      max-width: 500px;
+      height: 250px;
+      border-radius: 20px;
+      margin: 50px auto;
+      box-shadow: 0 0 4px rgba(0,0,0,0.3);
+      background: white;
+    }
+
+    .content {
+      position: relative;
+      height: 100%;
+      border: 1px solid #eee;
+      border-radius: 7px;
+    }
+
+    .btn {
+      display: block;
+      border: 10px solid pink;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      text-align: center;
+      padding: 20px;
+      color: purple;
+      cursor: pointer;
+
+      font-size: 13px;
+    }
+
+    .btn:hover {
+      background: purple;
+      color: pink;
+    }
+
+    .btn:active {
+      background: pink;
+      color: purple;
+    }
+
+    .btn i {
+      font-size: 20px;
+    }
+
+    h1, h3 {
+      text-align: center;
+      font-weight: 300;
+      color: purple;
+      margin: 30px;
+    }
+
+    .status {
+      position: absolute;
+      top: -30px;
+      left: 25px;
+    }
+
+    .status:before {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: -20px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid red;
+    }
+
+    .online:before {
+      background: green;
+    }
+
+    .token {
+      position: absolute;
+      bottom: -25px;
+      font-size: 11px;
+    }
+
+    @media screen and (max-width: 769px) {
+      .remote {
+        padding: 30px;
+        margin: 0 auto;
+      }
+    }
+
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+</head>
+<body>
+  <div class="remote">
+    <div class="content">
+      <div class="btn" style="position:absolute; left: 50px;" data-command="forward"><i class="fa fa-arrow-up"></i></div>
+      <div class="btn" style="position:absolute; top: 80px;" data-command="left"><i class="fa fa-arrow-left"></i></div>
+      <div class="btn" style="position:absolute; top: 80px; left: 100px;" data-command="right"><i class="fa fa-arrow-right"></i></div>
+      <div class="btn" style="position:absolute; top: 160px; left: 50px;"  data-command="backward"><i class="fa fa-arrow-down"></i></div>
+
+      <div class="btn" style="position:absolute; bottom: 0; right:0;" data-command="reset">
+        <i class="fa fa-refresh"></i>
+        <label>Auto</label>
+      </div>
+      <div class="btn" style="position:absolute; bottom: 85px; right:0;" data-command="stop">
+        <i class="fa fa-stop"></i>
+      </div>
+
+      <div class="status">Disconnected</div>
+      <div class="token">Access Token: 2a955fec4ajlablckjklbblahfaketoken</div>
+    </div>
+  </div>
+
+  <script>
+    $(function() {
+      $('.btn').on('click', function() {
+
+        var command = $(this).data('command');
+        var device_id = 'YOUR_DEVICE_ID';
+        var access_token = 'YOUR_ACCESS_TOKEN';
+
+        $.ajax({url: 'https://api.spark.io/v1/devices/' + device_id + '/manual', data: {
+          access_token: access_token,
+          params: command
+        }, method: 'POST'});    
+      });
+
+
+      var auth = btoa('USERNAME:PASSWORD');
+      $.ajax({
+          type: 'GET',
+          url: 'https://api.spark.io/v1/access_tokens',
+          headers: {
+              "Authorization": "Basic " + auth
+          },
+          success : function(data) {
+            console.log('New Spark Cloud Token:', data);
+          }
+      });
+
+    });
+
+  </script>
+</body>
+</html>
